@@ -2,10 +2,10 @@ default_run_options[:pty] = true
 
 #### Set these variables as needed ######################################################################
 #
-set :application, "ncarboretum.org" # The vhost container name (e.g. domain)
-set :repository,  "git@github.com:scullygroup/slicehost.git" # GitHub repo where this deploy lives
-set :user, "scully" # Username of your slice
-set :slice, "67.23.15.90" # The IP address of your slice
+set :application, "mydomain.com" # The vhost container name (e.g. domain)
+set :repository,  "git@github.com:USERNAME/REPONAME.git" # GitHub repo where the app lives
+set :user, "username" # Username of your slice
+set :slice, "xx.xx.xx.xx" # The IP address of your slice
 #
 #### You shouldn't need to change anything below ########################################################
 
@@ -117,9 +117,9 @@ namespace :slicehost do
   desc "Configure Passenger"
   task :config_passenger do
     passenger_config =<<-EOF
-LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-1.0.1/ext/apache2/mod_passenger.so
-RailsSpawnServer /usr/lib/ruby/gems/1.8/gems/passenger-1.0.1/bin/passenger-spawn-server
-RailsRuby /usr/bin/ruby1.8    
+LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-2.1.3/ext/apache2/mod_passenger.so
+PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-2.1.3/bin/passenger-spawn-server
+PassengerRuby /usr/bin/ruby1.8    
     EOF
     put passenger_config, "src/passenger"
     sudo "mv src/passenger /etc/apache2/conf.d/passenger"

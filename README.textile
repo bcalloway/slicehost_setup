@@ -2,7 +2,7 @@ h1.  Capistrano recipe to setup an Ubuntu Slicehost server
 
 <p>This script sets up a Rails server stack on Slicehost, running Ubuntu Inprepid</p>
 
-<p>The updates to the original posting include updated gems, ImageMagick, and setup configs as specified in Slicehost articles for Ubuntu Intrepid</p> 
+<p>Includes updated gems, ImageMagick, and setup configs as specified in Slicehost articles for Ubuntu Intrepid</p> 
 
 h2.  What's installed
 

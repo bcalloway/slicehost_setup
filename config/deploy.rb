@@ -9,8 +9,8 @@ set :slice, "67.23.15.90" # The IP address of your slice
 #
 #### You shouldn't need to change anything below ########################################################
 
-
 set :deploy_to, "/home/#{user}/#{application}"
+
 
 set :scm, :git
 
@@ -22,7 +22,6 @@ namespace :slicehost do
   desc "Setup Environment"
   task :setup_env do
     update_apt_get
-    upgrade_system
     set_locale
     install_dev_tools
     install_git
@@ -36,12 +35,6 @@ namespace :slicehost do
   desc "Update aptitude sources"
   task :update_apt_get do
     sudo "aptitude update"
-  end
-  
-  desc "Apply system updates"
-  task :upgrade_system do  
-    sudo "aptitude safe-upgrade -y"
-    sudo "aptitude full-upgrade -y"
   end
 
   desc "Set system locale"
@@ -73,8 +66,8 @@ namespace :slicehost do
       "sudo ln -s /usr/bin/ri1.8 /usr/bin/ri",
       "sudo ln -s /usr/bin/rdoc1.8 /usr/bin/rdoc",
       "sudo ln -s /usr/bin/irb1.8 /usr/bin/irb",
-      "mkdir -p src",
-      "cd src",
+      "mkdir -p /home/#{user}/src",
+      "cd /home/#{user}/src",
       "wget http://rubyforge.org/frs/download.php/45905/rubygems-1.3.1.tgz",
       "tar xvzf rubygems-1.3.1.tgz",
       "cd rubygems-1.3.1/ && sudo ruby setup.rb",
@@ -83,6 +76,23 @@ namespace :slicehost do
       "sudo gem update --system",
       "sudo gem install rails"
     ].each {|cmd| run cmd}
+  end
+  
+  desc "Install common gems"
+  task :install_gems do
+    run "gem sources -a http://gems.github.com"
+    sudo "aptitude install imagemagick -y"
+    sudo "aptitude install libmagick9-dev -y"
+    sudo "gem install radiant"
+    sudo "gem install flickr_fu"
+    sudo "gem install haml"
+    sudo "gem install mislav-will_paginate"
+    sudo "gem install fastercsv"
+    sudo "gem install RedCloth"
+    sudo "gem install rmagick"    
+    sudo "gem install xml-magic"
+    sudo "gem install json"
+    sudo "gem install thoughtbot-paperclip"
   end
   
   desc "Install Apache"
@@ -126,6 +136,7 @@ RailsRuby /usr/bin/ruby1.8
     put vhost_config, "src/vhost_config"
     sudo "mv src/vhost_config /etc/apache2/sites-available/#{application}"
     sudo "a2ensite #{application}"
+    run "mkdir /home/#{user}/#{application}"
   end
   
   desc "Reload Apache"

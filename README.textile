@@ -1,9 +1,8 @@
 h1.  Capistrano recipe to setup an Ubuntu Slicehost server
 
-Adapted from Matt Swasey of Viget Labs.
-For specific instructions (and to see the origin of this), please visit "http://www.viget.com/extend/building-an-environment-from-scratch-with-capistrano-2":http://www.viget.com/extend/building-an-environment-from-scratch-with-capistrano-2/
-
 <p>This script sets up a Rails server stack on Slicehost, running Ubuntu Inprepid</p>
+
+<p>The updates to the original posting include updated gems, ImageMagick, and setup configs as specified in Slicehost articles for Ubuntu Intrepid</p> 
 
 h2.  What's installed
 
@@ -15,6 +14,19 @@ h2.  What's installed
 * Ruby 1.8.6
 * Rubygems 1.3.1
 * Rails 2.3.2
+* IMageMagick
+
+The following gems are installed:
+* radiant
+* flickr_fu
+* haml
+* mislav-will_paginate
+* fastercsv
+* RedCloth
+* rmagick    
+* xml-magic
+* json
+* thoughtbot-paperclip
 
 <p>Also configures Apache for use with Passenger, as well setting up a vhost container for the rails app.
 For more details, checkout <code>config/deploy.rb</code></p>
@@ -22,6 +34,39 @@ For more details, checkout <code>config/deploy.rb</code></p>
 
 h2.  Prerequisites
 
-* Slicehost slice running Ubuntu Intrepid
-* User "scully"
-* You first need to setup the basics as outlined, "http://articles.slicehost.com/2008/11/28/ubuntu-intrepid-setup-page-1":Here
+
+  * Slicehost slice running Ubuntu Intrepid
+  * Basic slice setup, "http://articles.slicehost.com/2008/11/28/ubuntu-intrepid-setup-page-1":http://articles.slicehost.com/2008/11/28/ubuntu-intrepid-setup-page-1
+  * Recommended that you upgrade the system before starting:
+  
+<pre><code>
+  sudo aptitude safe-upgrade
+  sudo aptitude full-upgrade
+</code></pre>
+
+h2.  How to use
+
+You should only need to modify the variables at the top of the deploy recipe in <code>config/deploy.rb</code>
+<pre><code>
+  set :application, "mydomain.com" # The vhost container name (e.g. domain)
+  set :repository,  "git@github.com:USERNAME/REPONAME.git" # GitHub repo where this deploy lives
+  set :user, "username" # Username of your slice
+  set :slice, "xx.xx.xx.xx" # The IP address of your slice
+</code></pre>
+
+The two lines below probably only need to be used if you are also deploying your app from this same recipe<br />
+_I only use this recipe for setting up my server, and is not contained in the app's repo itself_
+<pre><code>
+  set :repository,  "git@github.com:USERNAME/REPONAME.git"
+  set :deploy_to, "/home/#{user}/#{application}"
+</code></pre>
+
+<p>You can, of course, use this recipe as the primary <code>deploy.rb</code>, where all your <code>cap</code> commands access the declared namespaces.  This would allow you to setup the recipe on a per project basis.</p>
+
+<p>As an alternative, you can place this recipe in your app alongside the dev, staging, and production recipes using the <code>capistrano-ext</code> gem, which would allow you to issue <code>cap</code> commands on a per environment basis.  In this case, you could name this recipe <code>slicehost.rb</code>.  Be sure to declare this recipe in the top-level <code>deploy.rb</code> file.</p>
+
+<p>To run the recipe in it's entirety, issue the command <code>cap slicehost:setup_env</code>.</br>
+To see all the available commands, issue the command <code>cap -T</code>.</p>
+
+_Credit to Matt Swasey of Viget Labs for the idea, based on his blog entry_<br />
+"http://www.viget.com/extend/building-an-environment-from-scratch-with-capistrano-2":http://www.viget.com/extend/building-an-environment-from-scratch-with-capistrano-2/

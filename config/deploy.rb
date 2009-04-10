@@ -62,20 +62,26 @@ namespace :slicehost do
   
   desc "Install MySQL"
   task :install_mysql do
-    sudo "aptitude install mysql-server libmysql-ruby -y"
+    sudo "aptitude install mysql-server mysql-client libmysqlclient15-dev libmysql-ruby1.8 -y"
   end
   
   desc "Install Ruby, Gems, and Rails"
   task :install_rails_stack do
     [
-      "sudo aptitude install ruby ruby1.8-dev irb ri rdoc libopenssl-ruby1.8 -y",
+      "sudo aptitude install ruby1.8-dev ruby1.8 ri1.8 rdoc1.8 irb1.8 libreadline-ruby1.8 libruby1.8 libopenssl-ruby sqlite3 libsqlite3-ruby1.8 -y",
+      "sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby",
+      "sudo ln -s /usr/bin/ri1.8 /usr/bin/ri",
+      "sudo ln -s /usr/bin/rdoc1.8 /usr/bin/rdoc",
+      "sudo ln -s /usr/bin/irb1.8 /usr/bin/irb",
       "mkdir -p src",
       "cd src",
-      "wget http://rubyforge.org/frs/download.php/29548/rubygems-1.0.1.tgz",
-      "tar xvzf rubygems-1.0.1.tgz",
-      "cd rubygems-1.0.1/ && sudo ruby setup.rb",
+      "wget http://rubyforge.org/frs/download.php/45905/rubygems-1.3.1.tgz",
+      "tar xvzf rubygems-1.3.1.tgz",
+      "cd rubygems-1.3.1/ && sudo ruby setup.rb",
       "sudo ln -s /usr/bin/gem1.8 /usr/bin/gem",
-      "sudo gem install rails --no-ri --no-rdoc"
+      "sudo gem update",
+      "sudo gem update --system",
+      "sudo gem install rails"
     ].each {|cmd| run cmd}
   end
   
@@ -89,7 +95,7 @@ namespace :slicehost do
   
   desc "Install Passenger"
   task :install_passenger do
-    run "sudo gem install passenger --no-ri --no-rdoc"
+    run "sudo gem install passenger"
     input = ''
     run "sudo passenger-install-apache2-module" do |ch,stream,out|
       next if out.chomp == input.chomp || out.chomp == ''
@@ -124,6 +130,6 @@ RailsRuby /usr/bin/ruby1.8
   
   desc "Reload Apache"
   task :apache_reload do
-    sudo "/etc/init.d/apache2 reload"
+    sudo "/etc/init.d/apache2 restart"
   end
 end

@@ -40,8 +40,8 @@ namespace :slicehost do
   
   desc "Apply system updates"
   task :upgrade_system do  
-    sudo "aptitude safe-upgrade"
-    sudo "aptitude full-upgrade"
+    sudo "aptitude safe-upgrade -y"
+    sudo "aptitude full-upgrade -y"
   end
 
   desc "Set system locale"

@@ -117,9 +117,9 @@ namespace :slicehost do
   desc "Configure Passenger"
   task :config_passenger do
     passenger_config =<<-EOF
-LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-2.1.3/ext/apache2/mod_passenger.so
-PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-2.1.3/bin/passenger-spawn-server
-PassengerRuby /usr/bin/ruby1.8    
+    LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-2.2.2/ext/apache2/mod_passenger.so
+    PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-2.2.2
+    PassengerRuby /usr/bin/ruby1.8    
     EOF
     put passenger_config, "src/passenger"
     sudo "mv src/passenger /etc/apache2/conf.d/passenger"

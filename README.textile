@@ -70,3 +70,5 @@ To see all the available commands, issue the command <code>cap -T</code>.</p>
 
 _Credit to Matt Swasey of Viget Labs for the idea, based on his blog entry_<br />
 "http://www.viget.com/extend/building-an-environment-from-scratch-with-capistrano-2":http://www.viget.com/extend/building-an-environment-from-scratch-with-capistrano-2/
+
+Copyright (c) 2009 Brandon Calloway, released under the MIT License
